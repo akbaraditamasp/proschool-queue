@@ -1,0 +1,6 @@
+node_modules
+failed_jobs/*
+succeed_jobs/*
+!failed_jobs/.gitkeep
+!succeed_jobs/.gitkeep
+.env
