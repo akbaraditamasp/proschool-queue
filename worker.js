@@ -16,14 +16,24 @@ const connection = mysql.createConnection({
   password: process.env.MYSQL_PASS,
 });
 
-queue.process(async (job, done) => {
-  connection.query(job.data.task, (err, _) => {
-    if (err) {
-      throw new Error(err);
-    }
+const processing = (task) =>
+  new Promise((resolve) => {
+    connection.query(task, (err, _) => {
+      if (err) {
+        console.log(err);
+        resolve(false);
+      }
 
-    return done(null, null);
+      resolve(true);
+    });
   });
+
+queue.process(async (job, done) => {
+  if (await processing(job.data.task)) {
+    return done(null, null);
+  } else {
+    return done(new Error("Error"), null);
+  }
 });
 
 queue.on("succeeded", (job) => {
