@@ -5,6 +5,8 @@ const fs = require("fs");
 
 const isDev = (process.env.NODE_ENV || "development") === "development";
 
+console.log("running...");
+
 if (isDev) {
   require("dotenv").config();
 }

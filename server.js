@@ -28,4 +28,6 @@ app.post("/", async (req, res) => {
 
 const server = createServer(app);
 
-server.listen(process.env.PORT);
+server.listen(process.env.PORT, () => {
+  console.log("running");
+});
