@@ -24,6 +24,7 @@ const processing = (task, children = []) =>
       if (err) {
         console.log(err);
         resolve(false);
+        return;
       }
 
       let failed = false;
