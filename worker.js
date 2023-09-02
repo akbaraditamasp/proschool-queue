@@ -16,20 +16,35 @@ const connection = mysql.createConnection({
   password: process.env.MYSQL_PASS,
 });
 
-const processing = (task) =>
-  new Promise((resolve) => {
-    connection.query(task, (err, _) => {
+const processing = (task, children = []) =>
+  new Promise(async (resolve) => {
+    connection.query(task, async (err, result) => {
       if (err) {
         console.log(err);
         resolve(false);
       }
 
-      resolve(true);
+      let failed = false;
+      for (const query of children) {
+        if (
+          !(await processing(
+            query.task.replace("%id%", result.insertId),
+            query.children || []
+          ))
+        ) {
+          failed = true;
+          break;
+        }
+      }
+
+      if (!failed) {
+        resolve(true);
+      }
     });
   });
 
 queue.process(async (job, done) => {
-  if (await processing(job.data.task)) {
+  if (await processing(job.data.task, job.data.children || [])) {
     return done(null, null);
   } else {
     return done(new Error("Error"), null);
