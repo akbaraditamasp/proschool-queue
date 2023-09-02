@@ -17,7 +17,7 @@ const connection = mysql.createConnection({
 });
 
 const processing = (task, children = []) =>
-  new Promise(async (resolve) => {
+  new Promise((resolve) => {
     connection.query(task, async (err, result) => {
       if (err) {
         console.log(err);
