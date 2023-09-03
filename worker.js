@@ -1,9 +1,21 @@
 const mysql = require("mysql2");
 const Queue = require("bee-queue");
-const queue = new Queue("saving_worksheet");
 const fs = require("fs");
 
 const isDev = (process.env.NODE_ENV || "development") === "development";
+
+if (isDev) {
+  require("dotenv").config();
+}
+
+const queue = new Queue("saving_worksheet", {
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: 6379,
+    db: 0,
+    password: process.env.REDIS_PASS,
+  },
+});
 
 console.log("running...");
 
@@ -12,7 +24,7 @@ if (isDev) {
 }
 
 const connection = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
+  host: "103.250.11.49",
   user: process.env.MYSQL_USER,
   database: process.env.MYSQL_DB,
   password: process.env.MYSQL_PASS,

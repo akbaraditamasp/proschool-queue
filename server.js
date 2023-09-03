@@ -10,7 +10,14 @@ if (isDev) {
   require("dotenv").config();
 }
 
-const queue = new Queue("saving_worksheet");
+const queue = new Queue("saving_worksheet", {
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: 6379,
+    db: 0,
+    password: process.env.REDIS_PASS,
+  },
+});
 
 app.use(cors());
 app.use(bodyParser.json());
