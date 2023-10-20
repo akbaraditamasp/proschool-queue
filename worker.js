@@ -12,12 +12,8 @@ const queue = new Queue("saving_worksheet");
 
 console.log("running...");
 
-if (isDev) {
-  require("dotenv").config();
-}
-
 const connection = mysql.createConnection({
-  host: "103.250.11.49",
+  host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   database: process.env.MYSQL_DB,
   password: process.env.MYSQL_PASS,
